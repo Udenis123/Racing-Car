@@ -190,10 +190,10 @@ export default function Quiz({ level, onComplete }: QuizProps) {
 
   if (showResults) {
     const score = calculateScore();
-    const passed = score >= 80;
+    const passed = score >= 60;
 
     return (
-      <div className="bg-gray-800 p-8 rounded-lg max-w-2xl w-full">
+      <div className="bg-gray-800 p-8  lg:h-[490px] rounded-lg max-w-2xl w-full">
         <div className="text-center">
           {passed ? (
             <CheckCircle className="w-20 h-20 mx-auto mb-4 text-green-500" />
@@ -203,7 +203,7 @@ export default function Quiz({ level, onComplete }: QuizProps) {
           <h2 className="text-2xl mb-4">Quiz Results</h2>
           <p className="text-xl mb-4">Your score: {score}%</p>
           <p className="mb-4">
-            {passed ? "Congratulations! You passed!" : "Sorry, you need 80% to pass. Try again!"}
+            {passed ? "Congratulations! You passed!" : "Sorry, you need 60% to pass. Try again!"}
           </p>
           <button
             onClick={() => onComplete(passed)}

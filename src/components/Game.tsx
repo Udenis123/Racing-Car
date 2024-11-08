@@ -1,26 +1,18 @@
-import  { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Trophy, AlertTriangle } from 'lucide-react';
 import Quiz from './Quiz';
 import Road from './Road';
 import StartQuiz from './StartQuiz';
-import CCar from './Car'
+import CCar from './Car';
 
-const GAME_WIDTH = 400;
-const GAME_HEIGHT = 600;
-const CAR_WIDTH = 50;
-const MOVE_SPEED = 5;
-const ROAD_BOUNDS = {
-  left: GAME_WIDTH * 0.1,
-  right: GAME_WIDTH * 0.9
-};
+const GAME_WIDTH = 300;
+const GAME_HEIGHT = 550;
 
 const GAME_SPEED = {
   1: 3,
   2: 5,
   3: 7
 };
-
-
 
 type GameState = 'countdown' | 'playing' | 'quiz' | 'gameOver' | 'victory' | 'initial';
 
@@ -29,34 +21,10 @@ export default function Game() {
   const [countdown, setCountdown] = useState(3);
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-  const [carPosition, setCarPosition] = useState({ 
-    x: GAME_WIDTH / 2 - CAR_WIDTH / 2, 
-    y: GAME_HEIGHT - 100 
-  });
 
-  const [keys, setKeys] = useState({ left: false, right: false });
+  const [carPosition, setCarPosition] = useState<number>(0); // Start car at center of the road
   const gameLoopRef = useRef<number>();
-  const obstacleSpawnRef = useRef<NodeJS.Timeout>();
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') setKeys(k => ({ ...k, left: true }));
-      if (e.key === 'ArrowRight') setKeys(k => ({ ...k, right: true }));
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') setKeys(k => ({ ...k, left: false }));
-      if (e.key === 'ArrowRight') setKeys(k => ({ ...k, right: false }));
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
 
   useEffect(() => {
     if (gameState === 'countdown') {
@@ -77,35 +45,34 @@ export default function Game() {
     if (gameState !== 'playing') return;
 
     const gameLoop = () => {
-      setCarPosition(pos => {
-        const newX = pos.x + (keys.left ? -MOVE_SPEED : 0) + (keys.right ? MOVE_SPEED : 0);
-        const boundedX = Math.max(
-          ROAD_BOUNDS.left,
-          Math.min(ROAD_BOUNDS.right - CAR_WIDTH, newX)
-        );
-        return { x: boundedX, y: pos.y };
-      });
-
- 
-
       setScore(s => s + 1);
-      
-      if (score > (level * 1000)) {
+      if (score > level * 1000) {
         setGameState('quiz');
       }
-
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
     gameLoopRef.current = requestAnimationFrame(gameLoop);
-
- 
-
     return () => {
       if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
-      if (obstacleSpawnRef.current) clearInterval(obstacleSpawnRef.current);
     };
-  }, [gameState, keys, level, carPosition.x, carPosition.y, score]);
+  }, [gameState, level, score]);
+
+  // Handle user input for moving the car left and right
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        setCarPosition(prev => Math.max(-80, prev - 10)); // Move left
+      } else if (event.key === 'ArrowRight') {
+        setCarPosition(prev => Math.min(75, prev + 10)); // Move right
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleQuizComplete = (passed: boolean) => {
     if (passed) {
@@ -114,7 +81,6 @@ export default function Game() {
       } else {
         setLevel(l => l + 1);
         setGameState('countdown');
-       ;
       }
     } else {
       setGameState('gameOver');
@@ -133,15 +99,16 @@ export default function Game() {
     setGameState('initial');
     setLevel(1);
     setScore(0);
-    setCarPosition({ x: GAME_WIDTH / 2 - CAR_WIDTH / 2, y: GAME_HEIGHT - 100 });
+    setCarPosition(0); // Reset car to center when the game restarts
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
+    <div className="flex flex-col max-w-[500px] place-items-center border-b-black border-4 bg-gray-900 text-white p-4">
       {gameState !== 'initial' && (
-        <div className="mb-4 flex gap-4">
+        <div className="mb-4 font-bold bg-black px-3 rounded-lg py-2 flex gap-4">
           <div className="text-xl">Level: {level}</div>
           <div className="text-xl">Score: {score}</div>
+          <div> </div>
         </div>
       )}
 
@@ -156,12 +123,12 @@ export default function Game() {
       )}
 
       {(gameState === 'playing' || gameState === 'countdown') && (
-        <div className="relative" style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}>
+        <div className="relative h-screen" style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}>
           <Road width={GAME_WIDTH} height={GAME_HEIGHT} speed={GAME_SPEED[level as keyof typeof GAME_SPEED]} />
           
           {/* Player car */}
-          <div className='absolute '>
-            <CCar/>
+          <div style={{ position: 'absolute', top: '27%', left: carPosition }}>
+            <CCar />
           </div>
         </div>
       )}

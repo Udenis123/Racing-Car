@@ -9,7 +9,7 @@ const CarModel: React.FC<{ url: string }> = ({ url }) => {
   scene.rotation.x = -Math.PI / 2; // Rotate 90 degrees upward (in radians)
   scene.rotation.z = -Math.PI / 1;
   // Scale the car down to a smaller size
-  scene.scale.set(0.005, 0.005, 0.005); // Adjust the scale for a smaller appearance
+  scene.scale.set(0.006, 0.005, 0.006); // Adjust the scale for a smaller appearance
 
   // Change the color of the car material
   scene.traverse((child: any) => {

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Brain } from 'lucide-react';
 
+
 const initialQuestions = [
   {
     question: "What is the most important rule of safe driving?",
+    url:{},
     options: [
       "Always maintain speed",
       "Stay alert and focused",
@@ -48,7 +50,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
   const question = initialQuestions[currentQuestion];
 
   return (
-    <div className="bg-gray-800 p-8 rounded-lg max-w-2xl w-full">
+    <div className="bg-gray-800 p-8 rounded-lg   max-w-2xl w-full">
       <div className="text-center mb-6">
         <Brain className="w-16 h-16 mx-auto mb-4 text-blue-500" />
         <h2 className="text-2xl font-bold text-white">Before You Start</h2>
@@ -62,7 +64,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className="w-full p-4 text-left bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-white"
+              className="w-full p-2 text-left bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-white"
             >
               {option}
             </button>

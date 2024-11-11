@@ -65,6 +65,10 @@ export default function Game() {
         setCarPosition(prev => Math.max(-80, prev - 10)); // Move left
       } else if (event.key === 'ArrowRight') {
         setCarPosition(prev => Math.min(75, prev + 10)); // Move right
+      }else if(event.key === 'd'){
+        setCarPosition(prev => Math.min(75, prev + 10));
+      }else if(event.key === 'a'){
+        setCarPosition(prev => Math.max(-80, prev - 10));
       }
     };
 
@@ -152,7 +156,7 @@ export default function Game() {
       )}
 
       {gameState === 'victory' && (
-        <div className="text-center">
+        <div className="text-center min-w-[400px]">
           <Trophy className="w-20 h-20 mx-auto mb-4 text-yellow-500" />
           <h2 className="text-2xl mb-4">Congratulations! You've completed all levels!</h2>
           <p className="mb-4">Final Score: {score}</p>

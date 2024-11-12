@@ -4,6 +4,7 @@ import Quiz from './Quiz';
 import Road from './Road';
 import StartQuiz from './StartQuiz';
 import CCar from './Car';
+import collisionSound from './collision_sound_effect.mp3';
 
 const GAME_WIDTH = 300;
 const GAME_HEIGHT = 550;
@@ -14,17 +15,36 @@ const GAME_SPEED = {
   3: 7
 };
 
+const CAR_WIDTH = 30; // Width of the car
+const CAR_HEIGHT = 50; // Height of the car
+
 type GameState = 'countdown' | 'playing' | 'quiz' | 'gameOver' | 'victory' | 'initial';
+
+type OncomingCar = {
+  id: number;
+  x: number;
+  y: number;
+  speed: number;
+  color: string;
+};
 
 export default function Game() {
   const [gameState, setGameState] = useState<GameState>('initial');
   const [countdown, setCountdown] = useState(3);
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-
-  const [carPosition, setCarPosition] = useState<number>(0); // Start car at center of the road
+  const [carPosition, setCarPosition] = useState<number>(GAME_WIDTH / 2 - CAR_WIDTH / 2);
+  const [oncomingCars, setOncomingCars] = useState<OncomingCar[]>([]);
+  const collisionAudio = useRef<HTMLAudioElement>(new Audio(collisionSound));
   const gameLoopRef = useRef<number>();
 
+  const playCollisionSound = () => {
+    collisionAudio.current.play();
+    setTimeout(() => {
+      collisionAudio.current.pause();
+      collisionAudio.current.currentTime = 0;
+    }, 3000);
+  };
 
   useEffect(() => {
     if (gameState === 'countdown') {
@@ -46,9 +66,48 @@ export default function Game() {
 
     const gameLoop = () => {
       setScore(s => s + 1);
+
       if (score > level * 1000) {
         setGameState('quiz');
       }
+
+      // Move oncoming cars
+      setOncomingCars(prevCars =>
+        prevCars
+          .map(car => ({
+            ...car,
+            y: car.y + car.speed,
+          }))
+          .filter(car => car.y < GAME_HEIGHT)
+      );
+
+      // Generate new cars in specific lanes
+      if (Math.random() < 0.01) {
+        const lanePositions = [0, GAME_WIDTH / 2.8, GAME_WIDTH / 1.6];
+        const randomLane = lanePositions[Math.floor(Math.random() * lanePositions.length)];
+        const newCar: OncomingCar = {
+          id: Date.now(),
+          x: randomLane,
+          y: -CAR_HEIGHT,
+          speed: GAME_SPEED[level as keyof typeof GAME_SPEED] + Math.random() * 2,
+          color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+        };
+        setOncomingCars(prevCars => [...prevCars, newCar]);
+      }
+
+      // Refine collision detection
+      oncomingCars.forEach(car => {
+        const carWithinHorizontalBounds =
+          car.x < carPosition + CAR_WIDTH && car.x + CAR_WIDTH > carPosition;
+        const carWithinVerticalBounds =
+          car.y + CAR_HEIGHT > GAME_HEIGHT - CAR_HEIGHT * 2 && car.y < GAME_HEIGHT - 60;
+
+        if (carWithinHorizontalBounds && carWithinVerticalBounds) {
+          playCollisionSound();
+          setGameState('gameOver');
+        }
+      });
+
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
@@ -56,19 +115,14 @@ export default function Game() {
     return () => {
       if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
-  }, [gameState, level, score]);
+  }, [gameState, level, score, oncomingCars, carPosition]);
 
-  // Handle user input for moving the car left and right
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
-        setCarPosition(prev => Math.max(-80, prev - 10)); // Move left
+        setCarPosition(prev => Math.max(0, prev - 10));
       } else if (event.key === 'ArrowRight') {
-        setCarPosition(prev => Math.min(75, prev + 10)); // Move right
-      }else if(event.key === 'd'){
-        setCarPosition(prev => Math.min(75, prev + 10));
-      }else if(event.key === 'a'){
-        setCarPosition(prev => Math.max(-80, prev - 10));
+        setCarPosition(prev => Math.min(GAME_WIDTH - CAR_WIDTH, prev + 10));
       }
     };
 
@@ -103,7 +157,8 @@ export default function Game() {
     setGameState('initial');
     setLevel(1);
     setScore(0);
-    setCarPosition(0); // Reset car to center when the game restarts
+    setCarPosition(GAME_WIDTH / 2 - CAR_WIDTH / 2);
+    setOncomingCars([]);
   };
 
   return (
@@ -112,7 +167,6 @@ export default function Game() {
         <div className="mb-4 font-bold bg-black px-3 rounded-lg py-2 flex gap-4">
           <div className="text-xl">Level: {level}</div>
           <div className="text-xl">Score: {score}</div>
-          <div> </div>
         </div>
       )}
 
@@ -129,11 +183,26 @@ export default function Game() {
       {(gameState === 'playing' || gameState === 'countdown') && (
         <div className="relative h-screen" style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}>
           <Road width={GAME_WIDTH} height={GAME_HEIGHT} speed={GAME_SPEED[level as keyof typeof GAME_SPEED]} />
-          
-          {/* Player car */}
+
           <div style={{ position: 'absolute', top: '27%', left: carPosition }}>
             <CCar />
           </div>
+
+          {oncomingCars.map(car => (
+            <div
+              key={car.id}
+              style={{
+                position: 'absolute',
+                top: `${car.y}px`,
+                left: `${car.x}px`,
+                width: CAR_WIDTH,
+                height: CAR_HEIGHT,
+                backgroundColor: car.color,
+                border: '2px solid #fff',
+                borderRadius: '5px',
+              }}
+            />
+          ))}
         </div>
       )}
 

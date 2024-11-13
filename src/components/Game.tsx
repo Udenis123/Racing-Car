@@ -3,7 +3,6 @@ import { Trophy, AlertTriangle } from 'lucide-react';
 import Quiz from './Quiz';
 import Road from './Road';
 import StartQuiz from './StartQuiz';
-import CCar from './Car';
 
 const GAME_WIDTH = 300;
 const GAME_HEIGHT = 550;
@@ -21,8 +20,6 @@ export default function Game() {
   const [countdown, setCountdown] = useState(3);
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-
-  const [carPosition, setCarPosition] = useState<number>(0); // Start car at center of the road
   const gameLoopRef = useRef<number>();
 
 
@@ -58,25 +55,6 @@ export default function Game() {
     };
   }, [gameState, level, score]);
 
-  // Handle user input for moving the car left and right
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') {
-        setCarPosition(prev => Math.max(-80, prev - 10)); // Move left
-      } else if (event.key === 'ArrowRight') {
-        setCarPosition(prev => Math.min(75, prev + 10)); // Move right
-      }else if(event.key === 'd'){
-        setCarPosition(prev => Math.min(75, prev + 10));
-      }else if(event.key === 'a'){
-        setCarPosition(prev => Math.max(-80, prev - 10));
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
 
   const handleQuizComplete = (passed: boolean) => {
     if (passed) {
@@ -103,7 +81,6 @@ export default function Game() {
     setGameState('initial');
     setLevel(1);
     setScore(0);
-    setCarPosition(0); // Reset car to center when the game restarts
   };
 
   return (
@@ -130,10 +107,6 @@ export default function Game() {
         <div className="relative h-screen" style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}>
           <Road width={GAME_WIDTH} height={GAME_HEIGHT} speed={GAME_SPEED[level as keyof typeof GAME_SPEED]} />
           
-          {/* Player car */}
-          <div style={{ position: 'absolute', top: '27%', left: carPosition }}>
-            <CCar />
-          </div>
         </div>
       )}
 
@@ -142,7 +115,7 @@ export default function Game() {
       )}
 
       {gameState === 'gameOver' && (
-        <div className="text-center">
+        <div className="text-center w-[350px]">
           <AlertTriangle className="w-20 h-20 mx-auto mb-4 text-red-500" />
           <h2 className="text-2xl mb-4">Game Over!</h2>
           <p className="mb-4">Final Score: {score}</p>

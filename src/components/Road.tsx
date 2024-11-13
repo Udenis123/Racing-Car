@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Car {
   x: number;
   y: number;
-  lane: number;
   speed: number;
   color: string;
 }
@@ -16,6 +15,7 @@ interface RoadProps {
 
 export default function Road({ width, height, speed }: RoadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,26 +27,24 @@ export default function Road({ width, height, speed }: RoadProps) {
     let offset = 4;
     let animationId: number;
 
-    // Initialize cars
+    const roadMargin = width * 0.1;
+    const roadWidth = width - 2 * roadMargin;
+
+    // Initialize player and obstacle cars
+    const playerCar: Car = { x: width / 2, y: height - 60, speed: 5, color: '#ffffff' };
     const cars: Car[] = [
-      { x: width / 1.3, y: height * 2, lane: 1, speed: speed, color: '#ef4444' },
-      { x: width / 4, y: height * 0.3, lane: 2, speed: speed+2, color: '#3b82f6' },
-      { x: width / 2, y: height * 0.5, lane: 1, speed: speed, color: '#10b981' }
+      { x: width / 1.3, y: height * 2, speed: speed, color: '#ef4444' },
+      { x: width / 4, y: height * 0.3, speed: speed + 2, color: '#3b82f6' },
+      { x: width / 2, y: height * 0.5, speed: speed, color: '#10b981' },
     ];
 
     const drawCar = (ctx: CanvasRenderingContext2D, car: Car) => {
       const carWidth = 30;
       const carHeight = 50;
-
-      // Car body
       ctx.fillStyle = car.color;
       ctx.fillRect(car.x - carWidth / 2, car.y, carWidth, carHeight);
-      
-      // Windows
       ctx.fillStyle = '#1f2937';
       ctx.fillRect(car.x - carWidth / 2 + 5, car.y + 10, carWidth - 10, 15);
-      
-      // Wheels
       ctx.fillStyle = '#000000';
       ctx.fillRect(car.x - carWidth / 2 - 2, car.y + 5, 4, 10);
       ctx.fillRect(car.x + carWidth / 2 - 2, car.y + 5, 4, 10);
@@ -55,24 +53,55 @@ export default function Road({ width, height, speed }: RoadProps) {
     };
 
     const updateCars = () => {
-      cars.forEach(car => {
-        car.y = (car.y + car.speed/2) % height;
+      cars.forEach((car) => {
+        car.y = (car.y + car.speed / 2) % height;
         if (car.y < 0) car.y = height;
       });
     };
 
+    const checkCollision = (car1: Car, car2: Car) => {
+      const carWidth = 30;
+      const carHeight = 50;
+      return (
+        car1.x < car2.x + carWidth &&
+        car1.x + carWidth > car2.x &&
+        car1.y < car2.y + carHeight &&
+        car1.y + carHeight > car2.y
+      );
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isGameOver) return;
+
+      const moveDistance = 10;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          playerCar.x = Math.max(roadMargin + 15, playerCar.x - moveDistance);
+          break;
+        case 'ArrowRight':
+          playerCar.x = Math.min(roadMargin + roadWidth - 15, playerCar.x + moveDistance);
+          break;
+        case 'ArrowUp':
+          playerCar.y = Math.max(0, playerCar.y - moveDistance);
+          break;
+        case 'ArrowDown':
+          playerCar.y = Math.min(height - 50, playerCar.y + moveDistance);
+          break;
+        default:
+          break;
+      }
+    };
+
     const drawRoad = () => {
       if (!ctx) return;
-      
-      // Clear canvas
+
       ctx.fillStyle = '#1f2937';
       ctx.fillRect(0, 0, width, height);
 
-      // Draw moving lines
       const lineSpacing = 40;
       const lineHeight = 20;
-      
-      // Center lines (dashed yellow)
+
       ctx.strokeStyle = '#fbbf24';
       ctx.lineWidth = 4;
       for (let y = offset; y < height; y += lineSpacing) {
@@ -81,7 +110,7 @@ export default function Road({ width, height, speed }: RoadProps) {
         ctx.lineTo(width / 2.8, y + lineHeight);
         ctx.stroke();
       }
-      
+
       ctx.strokeStyle = '#fbbf24';
       ctx.lineWidth = 4;
       for (let y = offset; y < height; y += lineSpacing) {
@@ -91,36 +120,49 @@ export default function Road({ width, height, speed }: RoadProps) {
         ctx.stroke();
       }
 
-      // Side lines (solid white)
       ctx.strokeStyle = '#ffffff';
-      const roadMargin = width * 0.1;
-      [roadMargin, width - roadMargin].forEach(x => {
+      [roadMargin, width - roadMargin].forEach((x) => {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
         ctx.stroke();
       });
 
-      // Draw cars
-      cars.forEach(car => drawCar(ctx, car));
+      drawCar(ctx, playerCar);
 
-      // Update positions
+      cars.forEach((car) => {
+        drawCar(ctx, car);
+        if (checkCollision(playerCar, car)) {
+          setIsGameOver(true);
+          cancelAnimationFrame(animationId);
+        }
+      });
+
       offset = (offset + speed) % lineSpacing;
       updateCars();
 
-      animationId = requestAnimationFrame(drawRoad);
+      if (!isGameOver) {
+        animationId = requestAnimationFrame(drawRoad);
+      }
     };
 
     drawRoad();
-    return () => cancelAnimationFrame(animationId);
-  }, [width, height, speed]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [width, height, speed, isGameOver]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-      className="absolute top-0 left-0"
-    />
+    <div>
+      {isGameOver ? (
+        <div className="game-over">
+          <h1>Game Over</h1>
+        </div>
+      ) : (
+        <canvas ref={canvasRef} width={width} height={height} className="absolute top-0 left-0" />
+      )}
+    </div>
   );
 }

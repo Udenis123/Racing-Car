@@ -1,10 +1,12 @@
-import{ useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
 
 const quizData = {
   1: [
     {
       question: "What does a yellow traffic light mean?",
+      type: "text",
+      media: null,
       options: [
         "Speed up to get through",
         "Prepare to stop safely",
@@ -14,17 +16,23 @@ const quizData = {
       correct: 1
     },
     {
+      question: "Identify this road sign:",
+      type: "image",
+      media: "https://images.unsplash.com/photo-1572831808815-3dd8b0173c69?w=400&h=300&fit=crop",
+      options: ["Stop", "Yield", "Merge", "Speed Limit"],
+      correct: 1
+    },
+    {
       question: "What's the proper following distance in good conditions?",
-      options: [
-        "1 second",
-        "2 seconds",
-        "3 seconds",
-        "5 seconds"
-      ],
+      type: "video",
+      media: "https://player.vimeo.com/video/76979871",
+      options: ["1 second", "2 seconds", "3 seconds", "5 seconds"],
       correct: 2
     },
     {
       question: "When should you use your turn signals?",
+      type: "text",
+      media: null,
       options: [
         "Only when turning",
         "Only when changing lanes",
@@ -34,29 +42,30 @@ const quizData = {
       correct: 2
     },
     {
-      question: "What should you do if your brakes fail?",
+      question: "Identify the correct parking technique:",
+      type: "image",
+      media: "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=400&h=300&fit=crop",
       options: [
-        "Pump the brakes and use emergency brake",
-        "Jump out of the car",
-        "Close your eyes",
-        "Speed up"
+        "Parallel parking",
+        "Angle parking",
+        "Perpendicular parking",
+        "Double parking"
       ],
       correct: 0
     },
     {
       question: "What's the speed limit in a residential area?",
-      options: [
-        "15 mph",
-        "25 mph",
-        "35 mph",
-        "45 mph"
-      ],
+      type: "text",
+      media: null,
+      options: ["15 mph", "25 mph", "35 mph", "45 mph"],
       correct: 1
     }
   ],
   2: [
     {
-      question: "What does a solid white line between lanes mean?",
+      question: "What does this road marking mean?",
+      type: "image",
+      media: "https://images.unsplash.com/photo-1566996533071-2c578080c06e?w=400&h=300&fit=crop",
       options: [
         "Passing is encouraged",
         "Crossing is discouraged",
@@ -67,48 +76,24 @@ const quizData = {
     },
     {
       question: "When driving in fog, you should use:",
-      options: [
-        "High beams",
-        "Low beams",
-        "Hazard lights",
-        "No lights"
-      ],
+      type: "video",
+      media: "https://player.vimeo.com/video/76979871",
+      options: ["High beams", "Low beams", "Hazard lights", "No lights"],
       correct: 1
     },
     {
-      question: "What's the main purpose of anti-lock brakes (ABS)?",
-      options: [
-        "Stop faster",
-        "Prevent skidding while braking",
-        "Save fuel",
-        "Reduce tire wear"
-      ],
+      question: "Identify the correct tire pressure gauge reading:",
+      type: "image",
+      media: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=300&fit=crop",
+      options: ["28 PSI", "32 PSI", "36 PSI", "40 PSI"],
       correct: 1
-    },
-    {
-      question: "When should you check your blind spots?",
-      options: [
-        "Before changing lanes",
-        "When stopping",
-        "Only in bad weather",
-        "Never"
-      ],
-      correct: 0
-    },
-    {
-      question: "What's the proper hand position on the steering wheel?",
-      options: [
-        "12 and 6",
-        "10 and 2",
-        "9 and 3",
-        "8 and 4"
-      ],
-      correct: 2
     }
   ],
   3: [
     {
       question: "What should you do if hydroplaning?",
+      type: "video",
+      media: "https://player.vimeo.com/video/76979871",
       options: [
         "Brake hard",
         "Turn sharply",
@@ -118,17 +103,16 @@ const quizData = {
       correct: 2
     },
     {
-      question: "When are you most likely to encounter deer on the road?",
-      options: [
-        "Dawn and dusk",
-        "Noon",
-        "Mid-afternoon",
-        "Midnight"
-      ],
-      correct: 0
+      question: "Identify the correct hand position:",
+      type: "image",
+      media: "https://images.unsplash.com/photo-1574027542338-98e75acfd385?w=400&h=300&fit=crop",
+      options: ["12 and 6", "10 and 2", "9 and 3", "8 and 4"],
+      correct: 2
     },
     {
       question: "What's the first thing to do at the scene of an accident?",
+      type: "text",
+      media: null,
       options: [
         "Call your insurance",
         "Take photos",
@@ -136,26 +120,6 @@ const quizData = {
         "Leave quickly"
       ],
       correct: 2
-    },
-    {
-      question: "How often should you check your tire pressure?",
-      options: [
-        "Once a year",
-        "Monthly",
-        "Never",
-        "Only when flat"
-      ],
-      correct: 1
-    },
-    {
-      question: "What's the recommended tire tread depth minimum?",
-      options: [
-        "2/32 inch",
-        "4/32 inch",
-        "6/32 inch",
-        "8/32 inch"
-      ],
-      correct: 0
     }
   ]
 };
@@ -166,15 +130,23 @@ interface QuizProps {
 }
 
 export default function Quiz({ level, onComplete }: QuizProps) {
+  const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    // Randomly select 5 questions from the level's question pool
+    const levelQuestions = quizData[level as keyof typeof quizData];
+    const shuffled = [...levelQuestions].sort(() => Math.random() - 0.5);
+    setQuestions(shuffled.slice(0, 5));
+  }, [level]);
 
   const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...answers, answerIndex];
     setAnswers(newAnswers);
 
-    if (currentQuestion < quizData[level as keyof typeof quizData].length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(c => c + 1);
     } else {
       setShowResults(true);
@@ -183,31 +155,37 @@ export default function Quiz({ level, onComplete }: QuizProps) {
 
   const calculateScore = () => {
     const correctAnswers = answers.filter(
-      (answer, index) => answer === quizData[level as keyof typeof quizData][index].correct
+      (answer, index) => answer === questions[index].correct
     ).length;
-    return (correctAnswers / quizData[level as keyof typeof quizData].length) * 100;
+    return (correctAnswers / questions.length) * 100;
   };
+
+  if (questions.length === 0) {
+    return <div className="text-center">Loading questions...</div>;
+  }
 
   if (showResults) {
     const score = calculateScore();
     const passed = score >= 60;
 
     return (
-      <div className="bg-gray-800 p-8  lg:h-[490px] rounded-lg max-w-2xl w-full">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
         <div className="text-center">
           {passed ? (
             <CheckCircle className="w-20 h-20 mx-auto mb-4 text-green-500" />
           ) : (
             <XCircle className="w-20 h-20 mx-auto mb-4 text-red-500" />
           )}
-          <h2 className="text-2xl mb-4">Quiz Results</h2>
-          <p className="text-xl mb-4">Your score: {score}%</p>
-          <p className="mb-4">
-            {passed ? "Congratulations! You passed!" : "Sorry, you need 60% to pass. Try again!"}
+          <h2 className="text-3xl font-bold mb-4">Quiz Results</h2>
+          <p className="text-2xl mb-4">Your score: {score}%</p>
+          <p className="text-xl mb-6">
+            {passed 
+              ? "Congratulations! You passed!" 
+              : "Sorry, you need 60% to pass. Try again!"}
           </p>
           <button
             onClick={() => onComplete(passed)}
-            className="px-6 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg"
+            className="px-8 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition-colors"
           >
             {passed ? "Continue to Next Level" : "Try Again"}
           </button>
@@ -216,28 +194,51 @@ export default function Quiz({ level, onComplete }: QuizProps) {
     );
   }
 
-  const question = quizData[level as keyof typeof quizData][currentQuestion];
+  const question = questions[currentQuestion];
 
   return (
-    <div className="bg-gray-800 p-8 rounded-lg max-w-2xl w-full">
-      <div className="mb-6">
-        <h2 className="text-xl mb-2">Question {currentQuestion + 1} of {quizData[level as keyof typeof quizData].length}</h2>
-        <div className="h-2 bg-gray-700 rounded-full">
+    <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
+      <div className="mb-8">
+        <h2 className="text-xl mb-4">Question {currentQuestion + 1} of {questions.length}</h2>
+        <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-blue-500 rounded-full transition-all"
-            style={{ width: `${(currentQuestion / quizData[level as keyof typeof quizData].length) * 100}%` }}
-          ></div>
+            className="h-full bg-blue-500 transition-all duration-300 ease-out"
+            style={{ width: `${((currentQuestion) / questions.length) * 100}%` }}
+          />
         </div>
       </div>
 
-      <h3 className="text-xl mb-6">{question.question}</h3>
+      <div className="mb-6">
+        <h3 className="text-xl mb-6">{question.question}</h3>
+
+        {question.type === "image" && question.media && (
+          <div className="mb-6">
+            <img 
+              src={question.media} 
+              alt="Question visual"
+              className="w-full h-48 object-cover rounded-lg mb-4"
+            />
+          </div>
+        )}
+
+        {question.type === "video" && question.media && (
+          <div className="mb-6">
+            <iframe
+              src={question.media}
+              className="w-full aspect-video rounded-lg mb-4"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        )}
+      </div>
 
       <div className="space-y-4">
-        {question.options.map((option, index) => (
+        {question.options.map((option: string, index: number) => (
           <button
             key={index}
             onClick={() => handleAnswer(index)}
-            className="w-full p-4 text-left bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+            className="w-full p-4 text-left bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors font-medium"
           >
             {option}
           </button>

@@ -1,11 +1,10 @@
-
 import Game from './components/Game';
 
 function App() {
   return (
-    <div className=" flex justify-center md:fixed  lg:left-1/4 md:left-1/3 sm: top-0 h-screen ">
-    <Game />
-  </div>
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <Game />
+    </div>
   );
 }
 

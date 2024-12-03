@@ -3,50 +3,49 @@ import { Brain } from 'lucide-react';
 
 const initialQuestions = [
   {
-    question: "What is the most important rule of safe driving?",
+    question: "Ijambo”akagarurarumuri” bivuga akantu karabagirana gasubiza imirasire y’urumuri:",
     type: "text",
     media: null,
     options: [
-      "Always maintain speed",
-      "Stay alert and focused",
-      "Use horn frequently",
-      "Race with others"
+      "ku kintu kirabagirana",
+      "Ku kintu kiyohereje",
+      "ku mpande z’inzira nyabagendwa"
     ],
     correct: 1
   },
   {
-    question: "Identify this traffic sign:",
+    question: "Iki cyapa gisobanuye iki?:",
     type: "image",
-    media: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop",
+    media: "https://i0.wp.com/printex.co.za/wp-content/uploads/2023/03/Yield-Road-Sign.png?fit=1024%2C1024&ssl=1",
     options: [
-      "Stop sign",
-      "Yield sign",
-      "Speed limit",
-      "No entry"
+      "Hagarara",
+      "Tanga inzira",
+      "Ihute baraguha inzira",
+      "Ntihanyurwa"
     ],
-    correct: 0
+    correct: 1
   },
   {
-    question: "What should you check before starting to drive?",
-    type: "video",
-    media: "https://player.vimeo.com/video/76979871",
+    question: "Ni iki ukwiye kwitondera mbere yo guhaguruka?",
+    type: "text",
+    media: null,
     options: [
-      "Only fuel level",
-      "Nothing, just start driving",
-      "Mirrors, seatbelt, and surroundings",
-      "Radio stations"
+      "Uko essance ingana",
+      "Ntacyo , Ihagurukire",
+      "Indorerwamo, Umukandara, Ibindi bigukikije",
+      "Sitasiyo ya radiyo ivuga neza"
     ],
     correct: 2
   },
   {
-    question: "Which lane position is correct for turning right?",
-    type: "image",
-    media: "https://images.unsplash.com/photo-1597037203822-2c48ac1b0f5b?w=400&h=300&fit=crop",
+    question: "Ni ikihe gice cy'umuhanda ukwiye kujjyamo mu gihe ushaka gukata i buryo?",
+    type: "text",
+    media: null,
     options: [
-      "Left lane",
-      "Middle lane",
-      "Right lane",
-      "Any lane"
+      "Ikiri ibumoso",
+      "Ikiri hagati",
+      "Ikiri iburyo",
+      "Icyaricyo cyose"
     ],
     correct: 2
   }
@@ -90,8 +89,8 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
     <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
       <div className="text-center mb-8">
         <Brain className="w-16 h-16 mx-auto mb-4 text-blue-500" />
-        <h2 className="text-3xl font-bold text-white mb-2">Safe Driving Quiz</h2>
-        <p className="text-gray-400">Test your knowledge before hitting the road</p>
+        <h2 className="text-3xl font-bold text-white mb-2">Isuzuma ku mategeko n'amabwiriza yo mu muhanda</h2>
+        <p className="text-gray-400">Isuzume mbere yo gutangira gutwara</p>
       </div>
 
       <div className="mb-8">

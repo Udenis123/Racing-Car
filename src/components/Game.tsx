@@ -96,9 +96,9 @@ export default function Game() {
     <div className="flex flex-col max-w-[500px] place-items-center border-4 border-gray-800 bg-gray-900 text-white p-4 rounded-xl shadow-2xl">
       {gameState !== 'initial' && (
         <div className="mb-4 font-bold bg-gray-800 px-6 py-3 rounded-lg flex gap-6 shadow-lg">
-          <div className="text-xl">Level: {level}</div>
-          <div className="text-xl">Score: {score}</div>
-          <div className="text-xl">Target: {level * SCORE_TO_QUIZ}</div>
+          <div className="text-xl">Icyiciro: {level}</div>
+          <div className="text-xl">Amanota: {score}</div>
+          <div className="text-xl">Ategetswe: {level * SCORE_TO_QUIZ}</div>
         </div>
       )}
 

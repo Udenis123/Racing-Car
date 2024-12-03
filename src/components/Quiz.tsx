@@ -2,75 +2,67 @@ import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
 
 const quizData = {
-  1: [
-    {
-      question: "What does a yellow traffic light mean?",
-      type: "text",
-      media: null,
-      options: [
-        "Speed up to get through",
-        "Prepare to stop safely",
-        "Stop immediately",
-        "Ignore it if you're in a hurry"
-      ],
-      correct: 1
-    },
-    {
-      question: "Identify this road sign:",
-      type: "image",
-      media: "https://images.unsplash.com/photo-1572831808815-3dd8b0173c69?w=400&h=300&fit=crop",
-      options: ["Stop", "Yield", "Merge", "Speed Limit"],
-      correct: 1
-    },
-    {
-      question: "What's the proper following distance in good conditions?",
-      type: "video",
-      media: "https://player.vimeo.com/video/76979871",
-      options: ["1 second", "2 seconds", "3 seconds", "5 seconds"],
-      correct: 2
-    },
-    {
-      question: "When should you use your turn signals?",
-      type: "text",
-      media: null,
-      options: [
-        "Only when turning",
-        "Only when changing lanes",
-        "When turning or changing lanes",
-        "Only in heavy traffic"
-      ],
-      correct: 2
-    },
-    {
-      question: "Identify the correct parking technique:",
-      type: "image",
-      media: "https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?w=400&h=300&fit=crop",
-      options: [
-        "Parallel parking",
-        "Angle parking",
-        "Perpendicular parking",
-        "Double parking"
-      ],
-      correct: 0
-    },
-    {
-      question: "What's the speed limit in a residential area?",
-      type: "text",
-      media: null,
-      options: ["15 mph", "25 mph", "35 mph", "45 mph"],
-      correct: 1
-    }
-  ],
   2: [
     {
-      question: "What does this road marking mean?",
-      type: "image",
-      media: "https://images.unsplash.com/photo-1566996533071-2c578080c06e?w=400&h=300&fit=crop",
+      question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
+      type: "text",
+      media: null,
       options: [
-        "Passing is encouraged",
-        "Crossing is discouraged",
-        "No traffic allowed",
-        "Speed limit zone"
+        "iburyo",
+        "ibumoso",
+        "Ku ruhande uru n'uru",
+        "iburyo cyangwa ibumoso"
+      ],
+      correct: 3
+    },
+    {
+      question: "Ikinyabiziga cyose cg ibinyabiziga bikururana,iyo bigenda bigomba kugira :",
+      type: "text",
+      media: null,
+      options: [
+        "Ikibiranga",
+        "Imyanya yo kwicarwamo",
+        "Ubiyobora",
+        "Ntagisubizo cy’ukuri kirimo"
+      ],
+      correct: 2
+    },
+    {
+      question: "Ntawe ushobora gutwara ikinyabiziga kigendeshwa na moteur mu nzira nyabagendwa adafite kandi atitwaje uruhushya rwo gutwara ibinyabiziga rwatanzwe na:",
+      type: "text",
+      media: null,
+      options: [
+        "Prokireri wa Republika",
+        "Ministri ushinzwe gutwara abantu n’ibintu",
+        "Komite y’igihugu ishinzwe umutekano mu muhanda",
+        "Police y’igihugu"
+      ],
+      correct: 3
+    },
+    {
+      question: "Ni ryari ukwiye gukoresha amatara ndanga cyerekezo cg ikinyoteri?",
+      type: "text",
+      media: null,
+      options: [
+        "Iyo ugiye gukata gusa",
+        "Iyo uri guhinduranya ibisate by'umuhanda gusa",
+        "Iyo ugiye gukata cyangwa guhindura igisate cy'umuhanda",
+        "iyo uri mu muvundo w'ibinyabiziga gusa"
+      ],
+      correct: 2
+    },
+    
+  ],
+  1: [
+    {
+      question: "Iki cyapa gisobanura iki?",
+      type: "image",
+      media: "https://cbx-prod.b-cdn.net/COLOURBOX50956207.jpg?width=800&height=800&quality=70&fit=cover",
+      options: [
+        "Ntihanyurwa",
+        "Komeza w'igengesereye",
+        "Si njye kireba",
+        "Inkomane imbere"
       ],
       correct: 1
     },
@@ -199,7 +191,7 @@ export default function Quiz({ level, onComplete }: QuizProps) {
   return (
     <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
       <div className="mb-8">
-        <h2 className="text-xl mb-4">Question {currentQuestion + 1} of {questions.length}</h2>
+        <h2 className="text-xl mb-4">Ikibazo cya {currentQuestion + 1} muri {questions.length}</h2>
         <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
           <div 
             className="h-full bg-blue-500 transition-all duration-300 ease-out"

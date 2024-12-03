@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { cover } from 'three/src/extras/TextureUtils.js';
+
 
 const quizData = {
-  2: [
+  1: [
     {
       question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
       type: "text",
@@ -53,63 +55,68 @@ const quizData = {
     },
     
   ],
-  1: [
+  2: [
     {
       question: "Iki cyapa gisobanura iki?",
       type: "image",
-      media: "https://cbx-prod.b-cdn.net/COLOURBOX50956207.jpg?width=800&height=800&quality=70&fit=cover",
+      media: "https://media.istockphoto.com/id/452240089/vector/no-entry-german-road-sign.jpg?s=612x612&w=0&k=20&c=2OOVqYE-tuTMLfi89LT9-DAOkMzYuu0NZ7ToGUnsjuE=",
       options: [
         "Ntihanyurwa",
         "Komeza w'igengesereye",
         "Si njye kireba",
         "Inkomane imbere"
       ],
+      correct: 0
+    },
+    {
+      question: "Iyo uri gutwara mu gihu ukwiye gucana aya matara:",
+      type: "text",
+      media: null,
+      options: ["Amaremare", "Amagufi", "Y'imbere mu kinyabiziga", "Si ngombwa kuyacana"],
       correct: 1
     },
     {
-      question: "When driving in fog, you should use:",
-      type: "video",
-      media: "https://player.vimeo.com/video/76979871",
-      options: ["High beams", "Low beams", "Hazard lights", "No lights"],
-      correct: 1
-    },
-    {
-      question: "Identify the correct tire pressure gauge reading:",
+      question: "Iki cyapa kiri mubuhe bwoko bw'ibyapa?:",
       type: "image",
-      media: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=300&fit=crop",
-      options: ["28 PSI", "32 PSI", "36 PSI", "40 PSI"],
-      correct: 1
+      media: "https://grammarvocab.com/wp-content/uploads/2022/11/Road-Work-Signs.png?w=400&h=300&fit=crop",
+      options: ["Ibibuza", "Ibitegeka", "Ibiburira", "Ibiyobora"],
+      correct: 2
     }
   ],
   3: [
     {
-      question: "What should you do if hydroplaning?",
-      type: "video",
-      media: "https://player.vimeo.com/video/76979871",
+      question: "Wakora iki ugeze mu masangano harimo itara ry'umuhondo mu bimenyetso bimurika?",
+      type: "image",
+      media: "https://cdn-hhemp.nitrocdn.com/CzTrBAAAQEDiquGqUnZSWpxDsbIQwMVJ/assets/images/optimized/rev-059b1fc/www.phoenixlawteam.com/wp-content/uploads/2024/01/yellow-traffic-light.jpg?w=400&h=300&fit=crop",
       options: [
-        "Brake hard",
-        "Turn sharply",
-        "Ease off gas and steer straight",
-        "Accelerate"
+        "Ihute kuko henda kujyamo umutuku",
+        "hita uhagarara aho ugeze",
+        "Komeza witegura guhagarara cyangwa uhagarara niba utateza ibyago"
+        
       ],
       correct: 2
     },
     {
-      question: "Identify the correct hand position:",
+      question: "Mu bitegekwa n’umukozi ubifitiye ububasha ukuboko kuzamuye gutegeka ibi bikurikira:",
       type: "image",
-      media: "https://images.unsplash.com/photo-1574027542338-98e75acfd385?w=400&h=300&fit=crop",
-      options: ["12 and 6", "10 and 2", "9 and 3", "8 and 4"],
-      correct: 2
+      media: "https://www.highwaycodeuk.co.uk/uploads/3/2/9/2/3292309/published/traffic-approaching-from-the-front.jpg?1490721655?w=400&h=90",
+      options: ["Abagenzi bose bagomba guhagarara",
+                "Abagenzi bose bagomba guhagarara uretse abageze mu isangano", 
+                "Abaturuka imbere ye nibo bahagarara", 
+                "Nta gisubizo cy’ukuri kirimo"
+              
+      ],
+      correct: 1
     },
     {
-      question: "What's the first thing to do at the scene of an accident?",
+      question: "Wakora iki ugeze bwa mbere aho impanuka yabereye?",
       type: "text",
       media: null,
       options: [
-        "Call your insurance",
-        "Take photos",
-        "Ensure safety/call emergency services",
-        "Leave quickly"
+        "Kwihutira gukura mu kinyabiziga uwakoze impanuka",
+        "Guhumuriza uwakoze impanuka umuha icyo kunywa gikonje",
+        "Guahamagara abashinzwe ubutabazi no kwegezayo uwakoze impanuka mu gihe hari ibyago by'inkongi y'umuriro",
+        "Kujya kubaza uwakoze impanuka aho ababara"
       ],
       correct: 2
     }
@@ -209,6 +216,7 @@ export default function Quiz({ level, onComplete }: QuizProps) {
               src={question.media} 
               alt="Question visual"
               className="w-full h-48 object-cover rounded-lg mb-4"
+              style={{ width: '100%',objectFit:'scale-down'}}
             />
           </div>
         )}

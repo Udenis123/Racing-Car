@@ -102,6 +102,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
               src={question.media} 
               alt="Question visual"
               className="w-full h-48 object-cover rounded-lg mb-4"
+              style={{ width: '100%',objectFit:'scale-down'}}
             />
           </div>
         )}

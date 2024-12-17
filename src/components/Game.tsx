@@ -4,6 +4,12 @@ import Quiz from './Quiz';
 import Road from './Road';
 import StartQuiz from './StartQuiz';
 
+// Import sounds
+import crashSound from './sounds/crash-sound.mp3';
+import gameMusic from './sounds/game-music.mp3';
+import correctAnswerSound from './sounds/correct-answer.mp3';
+import wrongAnswerSound from './sounds/wrong-answer.mp3';
+
 const GAME_WIDTH = 300;
 const GAME_HEIGHT = 400;
 
@@ -22,12 +28,40 @@ export default function Game() {
   const [countdown, setCountdown] = useState(3);
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
-  const gameLoopRef = useRef<number>();
 
+  const gameLoopRef = useRef<number>();
+  const gameMusicRef = useRef<HTMLAudioElement | null>(null);
+  const crashSoundRef = useRef<HTMLAudioElement | null>(null);
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null);
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize sounds on mount
+  useEffect(() => {
+    gameMusicRef.current = new Audio(gameMusic);
+    crashSoundRef.current = new Audio(crashSound);
+    correctSoundRef.current = new Audio(correctAnswerSound);
+    wrongSoundRef.current = new Audio(wrongAnswerSound);
+
+    if (gameMusicRef.current) {
+      gameMusicRef.current.loop = true; // Loop game music
+      gameMusicRef.current.volume = 0.5; // Adjust music volume
+    }
+  }, []);
+
+  // Start music when game begins
+  useEffect(() => {
+    if (gameState === 'playing') {
+      gameMusicRef.current?.play();
+    } else {
+      gameMusicRef.current?.pause();
+    }
+  }, [gameState]);
+
+  // Handle countdown
   useEffect(() => {
     if (gameState === 'countdown') {
       const timer = setInterval(() => {
-        setCountdown(c => {
+        setCountdown((c) => {
           if (c <= 1) {
             setGameState('playing');
             return 3;
@@ -39,11 +73,12 @@ export default function Game() {
     }
   }, [gameState]);
 
+  // Game loop logic
   useEffect(() => {
     if (gameState !== 'playing') return;
 
     const gameLoop = () => {
-      setScore(s => {
+      setScore((s) => {
         const newScore = s + 1;
         if (newScore >= level * SCORE_TO_QUIZ) {
           setGameState('quiz');
@@ -60,16 +95,24 @@ export default function Game() {
     };
   }, [gameState, level]);
 
+  // Play crash sound on game over
+  const handleGameOver = () => {
+    crashSoundRef.current?.play(); // Play crash sound
+    setGameState('gameOver');
+  };
+
   const handleQuizComplete = (passed: boolean) => {
     if (passed) {
+      correctSoundRef.current?.play();  // Play correct answer sound
       if (level === 3) {
         setGameState('victory');
       } else {
-        setLevel(l => l + 1);
+        setLevel((l) => l + 1);
         setGameState('countdown');
       }
     } else {
-      setGameState('gameOver');
+      wrongSoundRef.current?.play();  // Play wrong answer sound
+      handleGameOver();
     }
   };
 
@@ -81,15 +124,15 @@ export default function Game() {
     }
   };
 
-  const handleGameOver = () => {
-    setGameState('gameOver');
-  };
-
   const resetGame = () => {
     setGameState('initial');
     setLevel(1);
     setScore(0);
     setCountdown(3);
+    crashSoundRef.current?.pause();
+    if (crashSoundRef.current) {
+      crashSoundRef.current.currentTime = 0;
+    };
   };
 
   return (
@@ -102,16 +145,17 @@ export default function Game() {
         </div>
       )}
 
-      {gameState === 'initial' && (
-        <StartQuiz onComplete={handleStartQuizComplete} />
-      )}
+      {gameState === 'initial' && <StartQuiz onComplete={handleStartQuizComplete} />}
 
       {(gameState === 'playing' || gameState === 'countdown') && (
         <>
-          <div className="relative overflow-hidden rounded-lg" style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}>
-            <Road 
-              width={GAME_WIDTH} 
-              height={GAME_HEIGHT} 
+          <div
+            className="relative overflow-hidden rounded-lg"
+            style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
+          >
+            <Road
+              width={GAME_WIDTH}
+              height={GAME_HEIGHT}
               speed={GAME_SPEED[level as keyof typeof GAME_SPEED]}
               onGameOver={handleGameOver}
               isPlaying={gameState === 'playing'}
@@ -125,9 +169,7 @@ export default function Game() {
         </>
       )}
 
-      {gameState === 'quiz' && (
-        <Quiz level={level} onComplete={handleQuizComplete} />
-      )}
+      {gameState === 'quiz' && <Quiz level={level} onComplete={handleQuizComplete} />}
 
       {gameState === 'gameOver' && (
         <div className="text-center w-[350px] bg-gray-800 p-8 rounded-lg shadow-xl">
@@ -158,5 +200,6 @@ export default function Game() {
         </div>
       )}
     </div>
+    
   );
 }

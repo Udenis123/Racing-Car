@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle } from 'lucide-react';
-import { cover } from 'three/src/extras/TextureUtils.js';
+import correctAnswerSound from './sounds/correct-answer.mp3';
+import wrongAnswerSound from './sounds/wrong-answer.mp3';
 
 
 const quizData = {
@@ -144,6 +145,13 @@ export default function Quiz({ level, onComplete }: QuizProps) {
   const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...answers, answerIndex];
     setAnswers(newAnswers);
+
+    // Play sound based on whether the answer is correct or wrong
+    if (answerIndex === questions[currentQuestion].correct) {
+      new Audio(correctAnswerSound).play(); // Correct answer sound
+    } else {
+      new Audio(wrongAnswerSound).play(); // Wrong answer sound
+    }
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(c => c + 1);

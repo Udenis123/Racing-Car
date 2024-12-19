@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Trophy, AlertTriangle } from 'lucide-react';
+import { Trophy, AlertTriangle, VolumeOff, Volume2 } from 'lucide-react';
 import Quiz from './Quiz';
 import Road from './Road';
 import StartQuiz from './StartQuiz';
@@ -7,8 +7,6 @@ import StartQuiz from './StartQuiz';
 // Import sounds
 import crashSound from './sounds/crash-sound.mp3';
 import gameMusic from './sounds/game-music.mp3';
-import correctAnswerSound from './sounds/correct-answer.mp3';
-import wrongAnswerSound from './sounds/wrong-answer.mp3';
 
 const GAME_WIDTH = 300;
 const GAME_HEIGHT = 400;
@@ -28,6 +26,9 @@ export default function Game() {
   const [countdown, setCountdown] = useState(3);
   const [level, setLevel] = useState(1);
   const [score, setScore] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // To handle pause state
+  const [isMuted, setIsMuted] = useState(false); // To handle mute state
+  const [resumeCountdown, setResumeCountdown] = useState(3); // Countdown for resume
 
   const gameLoopRef = useRef<number>();
   const gameMusicRef = useRef<HTMLAudioElement | null>(null);
@@ -39,8 +40,6 @@ export default function Game() {
   useEffect(() => {
     gameMusicRef.current = new Audio(gameMusic);
     crashSoundRef.current = new Audio(crashSound);
-    correctSoundRef.current = new Audio(correctAnswerSound);
-    wrongSoundRef.current = new Audio(wrongAnswerSound);
 
     if (gameMusicRef.current) {
       gameMusicRef.current.loop = true; // Loop game music
@@ -48,14 +47,14 @@ export default function Game() {
     }
   }, []);
 
-  // Start music when game begins
+  // Start music when game begins or if it's unmuted
   useEffect(() => {
-    if (gameState === 'playing') {
+    if (gameState === 'playing' && !isMuted) {
       gameMusicRef.current?.play();
     } else {
       gameMusicRef.current?.pause();
     }
-  }, [gameState]);
+  }, [gameState, isMuted]);
 
   // Handle countdown
   useEffect(() => {
@@ -73,9 +72,26 @@ export default function Game() {
     }
   }, [gameState]);
 
+  // Resume countdown logic
+  useEffect(() => {
+    if (isPaused && resumeCountdown > 0) {
+      const timer = setInterval(() => {
+        setResumeCountdown((prev) => {
+          if (prev === 1) {
+            setGameState('playing');
+            setIsPaused(false); // Resume game after countdown
+            return 3;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [isPaused, resumeCountdown]);
+
   // Game loop logic
   useEffect(() => {
-    if (gameState !== 'playing') return;
+    if (gameState !== 'playing' || isPaused) return; // Stop game loop when paused
 
     const gameLoop = () => {
       setScore((s) => {
@@ -93,7 +109,7 @@ export default function Game() {
     return () => {
       if (gameLoopRef.current) cancelAnimationFrame(gameLoopRef.current);
     };
-  }, [gameState, level]);
+  }, [gameState, level, isPaused]);
 
   // Play crash sound on game over
   const handleGameOver = () => {
@@ -135,6 +151,17 @@ export default function Game() {
     };
   };
 
+  const togglePause = () => {
+    if (!isPaused) {
+      setIsPaused(true); // Pause the game
+      setResumeCountdown(3); // Reset the countdown to 3 when paused
+    }
+  };
+
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+  };
+
   return (
     <div className="flex flex-col max-w-[500px] place-items-center border-4 border-gray-800 bg-gray-900 text-white p-4 rounded-xl shadow-2xl">
       {gameState !== 'initial' && (
@@ -158,7 +185,7 @@ export default function Game() {
               height={GAME_HEIGHT}
               speed={GAME_SPEED[level as keyof typeof GAME_SPEED]}
               onGameOver={handleGameOver}
-              isPlaying={gameState === 'playing'}
+              isPlaying={gameState === 'playing' && !isPaused}  // Only pass true if the game is playing and not paused
             />
           </div>
           {gameState === 'countdown' && (
@@ -199,7 +226,24 @@ export default function Game() {
           </button>
         </div>
       )}
+
+      {/* Pause and Mute buttons */}
+      {gameState === 'playing' && (
+        <div className="absolute top-4 right-4 flex gap-4">
+          <button
+            onClick={togglePause}
+            className="px-4 py-2 bg-gray-800 text-white rounded-lg shadow-md"
+          >
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
+          <button
+            onClick={toggleMute}
+            className="px-4 py-2 bg-gray-800 text-white rounded-lg shadow-md"
+          >
+            {isMuted ? <VolumeOff className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+          </button>
+        </div>
+      )}
     </div>
-    
   );
 }

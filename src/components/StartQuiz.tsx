@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Brain } from 'lucide-react';
+import correctAnswerSound from './sounds/correct-answer.mp3';
+import wrongAnswerSound from './sounds/wrong-answer.mp3';
 
 const initialQuestions = [
   {
@@ -59,6 +61,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
   const [questions, setQuestions] = useState<typeof initialQuestions>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(true); // Track if the current answer is correct
 
   useEffect(() => {
     // Randomly select 2 questions from the pool
@@ -66,16 +69,28 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
     setQuestions(shuffled.slice(0, 2));
   }, []);
 
+  // Create Audio objects for sounds
+  const correctSound = new Audio(correctAnswerSound);
+  const wrongSound = new Audio(wrongAnswerSound);
+
   const handleAnswer = (answerIndex: number) => {
     const isCorrect = answerIndex === questions[currentQuestion].correct;
     const newScore = isCorrect ? score + 1 : score;
     setScore(newScore);
 
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(c => c + 1);
+    // Play the corresponding sound
+    if (isCorrect) {
+      correctSound.play();
+      setIsAnswerCorrect(true); // Answer is correct, allow moving to the next question
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(c => c + 1);
+      } else {
+        const passed = newScore === questions.length;
+        onComplete(passed);
+      }
     } else {
-      const passed = newScore === questions.length;
-      onComplete(passed);
+      wrongSound.play();
+      setIsAnswerCorrect(false); // Answer is incorrect, don't move to next question
     }
   };
 
@@ -102,7 +117,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
               src={question.media} 
               alt="Question visual"
               className="w-full h-48 object-cover rounded-lg mb-4"
-              style={{ width: '100%',objectFit:'scale-down'}}
+              style={{ width: '100%', objectFit: 'scale-down' }}
             />
           </div>
         )}
@@ -123,7 +138,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
             <button
               key={index}
               onClick={() => handleAnswer(index)}
-              className="w-full p-4 text-left bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-white font-medium"
+              className={`w-full p-4 text-left ${!isAnswerCorrect && index !== questions[currentQuestion].correct ? 'bg-gray-700' : 'bg-gray-700 hover:bg-gray-600'} rounded-lg transition-colors text-white font-medium`}
             >
               {option}
             </button>
@@ -135,9 +150,7 @@ export default function StartQuiz({ onComplete }: StartQuizProps) {
         {questions.map((_, index) => (
           <div
             key={index}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentQuestion ? 'bg-blue-500' : 'bg-gray-600'
-            }`}
+            className={`w-3 h-3 rounded-full transition-colors ${index === currentQuestion ? 'bg-blue-500' : 'bg-gray-600'}`}
           />
         ))}
       </div>

@@ -14,7 +14,7 @@ const GAME_HEIGHT = 400;
 const GAME_SPEED = {
   1: 1,
   2: 2,
-  3: 3
+  3: 3,
 };
 
 const SCORE_TO_QUIZ = 1000;
@@ -28,7 +28,6 @@ export default function Game() {
   const [score, setScore] = useState(0);
   const [isPaused, setIsPaused] = useState(false); // To handle pause state
   const [isMuted, setIsMuted] = useState(false); // To handle mute state
-  const [resumeCountdown, setResumeCountdown] = useState(3); // Countdown for resume
 
   const gameLoopRef = useRef<number>();
   const gameMusicRef = useRef<HTMLAudioElement | null>(null);
@@ -72,23 +71,6 @@ export default function Game() {
     }
   }, [gameState]);
 
-  // Resume countdown logic
-  useEffect(() => {
-    if (isPaused && resumeCountdown > 0) {
-      const timer = setInterval(() => {
-        setResumeCountdown((prev) => {
-          if (prev === 1) {
-            setGameState('playing');
-            setIsPaused(false); // Resume game after countdown
-            return 3;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [isPaused, resumeCountdown]);
-
   // Game loop logic
   useEffect(() => {
     if (gameState !== 'playing' || isPaused) return; // Stop game loop when paused
@@ -119,7 +101,7 @@ export default function Game() {
 
   const handleQuizComplete = (passed: boolean) => {
     if (passed) {
-      correctSoundRef.current?.play();  // Play correct answer sound
+      correctSoundRef.current?.play(); // Play correct answer sound
       if (level === 3) {
         setGameState('victory');
       } else {
@@ -127,7 +109,7 @@ export default function Game() {
         setGameState('countdown');
       }
     } else {
-      wrongSoundRef.current?.play();  // Play wrong answer sound
+      wrongSoundRef.current?.play(); // Play wrong answer sound
       handleGameOver();
     }
   };
@@ -148,14 +130,11 @@ export default function Game() {
     crashSoundRef.current?.pause();
     if (crashSoundRef.current) {
       crashSoundRef.current.currentTime = 0;
-    };
+    }
   };
 
   const togglePause = () => {
-    if (!isPaused) {
-      setIsPaused(true); // Pause the game
-      setResumeCountdown(3); // Reset the countdown to 3 when paused
-    }
+    setIsPaused((prev) => !prev); // Toggle the pause state
   };
 
   const toggleMute = () => {
@@ -185,7 +164,7 @@ export default function Game() {
               height={GAME_HEIGHT}
               speed={GAME_SPEED[level as keyof typeof GAME_SPEED]}
               onGameOver={handleGameOver}
-              isPlaying={gameState === 'playing' && !isPaused}  // Only pass true if the game is playing and not paused
+              isPlaying={gameState === 'playing' && !isPaused} // Only allow playing if not paused
             />
           </div>
           {gameState === 'countdown' && (

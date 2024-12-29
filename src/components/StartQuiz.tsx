@@ -4,6 +4,20 @@ import correctAnswerSound from './sounds/correct-answer.mp3';
 import wrongAnswerSound from './sounds/wrong-answer.mp3';
 
 const initialQuestions = [
+ 
+ 
+  {
+    question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+    type: "video",
+    media: "https://drive.google.com/file/d/1D38Uzggti9qoqsHp5PVlRMJ_iLrEMs34/preview",
+    options: [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    correct: 3
+  },
   {
     question: "Ijambo”akagarurarumuri” bivuga akantu karabagirana gasubiza imirasire y’urumuri:",
     type: "text",
@@ -14,6 +28,18 @@ const initialQuestions = [
       "ku mpande z’inzira nyabagendwa"
     ],
     correct: 1
+  },
+  {
+    question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+    type: "video",
+    media: "https://drive.google.com/file/d/1YyTZPbLcsmTwxMhI72f6eGhXzSmIWfaI/preview",
+    options: [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    correct: 2
   },
   {
     question: "Iki cyapa gisobanuye iki?:",
@@ -39,6 +65,7 @@ const initialQuestions = [
     ],
     correct: 2
   },
+  
   {
     question: "Ni ikihe gice cy'umuhanda ukwiye kujjyamo mu gihe ushaka gukata i buryo?",
     type: "text",

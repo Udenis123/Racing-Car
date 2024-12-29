@@ -17,11 +17,12 @@ interface RoadProps {
 
 export default function Road({ width, height, speed, onGameOver, isPlaying }: RoadProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const playerCarRef = useRef<Car>({ x: width / 2, y: height - 60, speed: 5, color: '#ffffff' });
+  const playerCarRef = useRef<Car>({ x: width / 2, y: height - 60, speed: 3, color: '#ffffff' });
   const carsRef = useRef<Car[]>([
-    { x: width / 1.3, y: -100, speed: speed, color: '#ef4444' },
-    { x: width / 4, y: -300, speed: speed + 2, color: '#3b82f6' },
-    { x: width / 2, y: -500, speed: speed, color: '#10b981' },
+    { x: width / 3, y: -100, speed: speed, color: '#ef4444' },
+    { x: width / 4, y: -500, speed: speed+0.7, color: '#3b82f6' },
+    { x: width / 2, y: -500, speed: speed-0.2, color: '#10b981' },
+    { x: width / 1.8, y: -500, speed: speed-0.5, color: '#D2B337' },
   ]);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function Road({ width, height, speed, onGameOver, isPlaying }: Ro
       carsRef.current.forEach((car) => {
         car.y += car.speed;
         if (car.y > height) {
-          car.y = -100;
+          car.y = -80;
           car.x = roadMargin + Math.random() * (roadWidth - 30);
         }
       });
@@ -84,40 +85,63 @@ export default function Road({ width, height, speed, onGameOver, isPlaying }: Ro
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!isGameActive || !isPlaying) return;
     
-      const moveDistance = 15; // Define the movement step size
+      const moveDistance = 15; // Base movement step size
+      const continuousMovementInterval = 50; // Interval in milliseconds for continuous movement
       const playerCar = playerCarRef.current;
     
-      // Vertical boundaries (similar to horizontal)
-      const roadTopMargin = 0; // Top boundary (can be adjusted based on your game design)
-      const roadHeight = height; // Full canvas height as the vertical limit
+      // Vertical boundaries
+      const roadTopMargin = 0; 
+      const roadHeight = height; 
     
-      switch (event.key.toLowerCase()) {
-        case 'arrowleft':
-        case 'a':
-          // Move left
-          playerCar.x = Math.max(roadMargin + 15, playerCar.x - moveDistance);
-          break;
+      const moveCar = (direction: string) => {
+        switch (direction) {
+          case 'left':
+            playerCar.x = Math.max(roadMargin + 15, playerCar.x - moveDistance);
+            break;
+          case 'right':
+            playerCar.x = Math.min(roadMargin + roadWidth - 15, playerCar.x + moveDistance);
+            break;
+          case 'up':
+            playerCar.y = Math.max(roadTopMargin + 15, playerCar.y - moveDistance);
+            break;
+          case 'down':
+            playerCar.y = Math.min(roadTopMargin + roadHeight - 15, playerCar.y + moveDistance);
+            break;
+          default:
+            break;
+        }
+      };
     
-        case 'arrowright':
-        case 'd':
-          // Move right
-          playerCar.x = Math.min(roadMargin + roadWidth - 15, playerCar.x + moveDistance);
-          break;
+      const keyDirectionMap: { [key: string]: string } = {
+        arrowleft: 'left',
+        a: 'left',
+        arrowright: 'right',
+        d: 'right',
+        arrowup: 'up',
+        w: 'up',
+        arrowdown: 'down',
+        s: 'down',
+      };
     
-        case 'arrowup':
-        case 'w':
-          // Move up
-          playerCar.y = Math.max(roadTopMargin + 15, playerCar.y - moveDistance);
-          break;
+      const direction = keyDirectionMap[event.key.toLowerCase()];
+      if (direction) {
+        moveCar(direction);
     
-        case 'arrowdown':
-        case 's':
-          // Move down
-          playerCar.y = Math.min(roadTopMargin + roadHeight - 15, playerCar.y + moveDistance);
-          break;
+        // Start continuous movement while the key is held down
+        const intervalId = setInterval(() => {
+          if (!isGameActive || !isPlaying) {
+            clearInterval(intervalId);
+            return;
+          }
+          moveCar(direction);
+        }, continuousMovementInterval);
     
-        default:
-          console.log(`Unhandled key: ${event.key}`);
+        // Stop continuous movement on keyup
+        const handleKeyUp = () => {
+          clearInterval(intervalId);
+          window.removeEventListener('keyup', handleKeyUp);
+        };
+        window.addEventListener('keyup', handleKeyUp);
       }
     };
     

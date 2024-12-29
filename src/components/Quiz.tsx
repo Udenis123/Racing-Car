@@ -7,6 +7,18 @@ import wrongAnswerSound from './sounds/wrong-answer.mp3';
 const quizData = {
   1: [
     {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/126o3g5L3T-VP4g7jl27dH145X8ouU9mB/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 2
+    },
+    {
       question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
       type: "text",
       media: null,
@@ -29,6 +41,18 @@ const quizData = {
         "Ntagisubizo cy’ukuri kirimo"
       ],
       correct: 2
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/19uPZ5v4dRBJpIUQ_9Vvn0vjlgwRKzKb9/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 3
     },
     {
       question: "Ntawe ushobora gutwara ikinyabiziga kigendeshwa na moteur mu nzira nyabagendwa adafite kandi atitwaje uruhushya rwo gutwara ibinyabiziga rwatanzwe na:",
@@ -54,6 +78,18 @@ const quizData = {
       ],
       correct: 2
     },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/1DdjILQYYy2gaaKo35Ox31s4xxUHudVYE/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 1
+    },
     
   ],
   2: [
@@ -68,7 +104,18 @@ const quizData = {
         "Inkomane imbere"
       ],
       correct: 0
-    },
+    },{
+    question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+    type: "video",
+    media: "https://drive.google.com/file/d/1v-jN95zI9XNyE-PxA_5nlLPA_YMwmqkM/preview",
+    options: [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    correct: 2
+  },
     {
       question: "Iyo uri gutwara mu gihu ukwiye gucana aya matara:",
       type: "text",
@@ -82,7 +129,55 @@ const quizData = {
       media: "https://grammarvocab.com/wp-content/uploads/2022/11/Road-Work-Signs.png?w=400&h=300&fit=crop",
       options: ["Ibibuza", "Ibitegeka", "Ibiburira", "Ibiyobora"],
       correct: 2
-    }
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/126o3g5L3T-VP4g7jl27dH145X8ouU9mB/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 2
+    },
+    {
+      question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
+      type: "text",
+      media: null,
+      options: [
+        "iburyo",
+        "ibumoso",
+        "Ku ruhande uru n'uru",
+        "iburyo cyangwa ibumoso"
+      ],
+      correct: 3
+    },
+    {
+      question: "Ikinyabiziga cyose cg ibinyabiziga bikururana,iyo bigenda bigomba kugira :",
+      type: "text",
+      media: null,
+      options: [
+        "Ikibiranga",
+        "Imyanya yo kwicarwamo",
+        "Ubiyobora",
+        "Ntagisubizo cy’ukuri kirimo"
+      ],
+      correct: 2
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/19uPZ5v4dRBJpIUQ_9Vvn0vjlgwRKzKb9/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 3
+    },
   ],
   3: [
     {
@@ -92,11 +187,24 @@ const quizData = {
       options: [
         "Ihute kuko henda kujyamo umutuku",
         "hita uhagarara aho ugeze",
-        "Komeza witegura guhagarara cyangwa uhagarara niba utateza ibyago"
+        "Komeza witegura guhagarara cyangwa uhagarara niba utateza ibyago w"
         
       ],
       correct: 2
     },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/1v-jN95zI9XNyE-PxA_5nlLPA_YMwmqkM/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 1
+    },
+    
     {
       question: "Mu bitegekwa n’umukozi ubifitiye ububasha ukuboko kuzamuye gutegeka ibi bikurikira:",
       type: "image",
@@ -120,7 +228,142 @@ const quizData = {
         "Kujya kubaza uwakoze impanuka aho ababara"
       ],
       correct: 2
-    }
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/126o3g5L3T-VP4g7jl27dH145X8ouU9mB/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 2
+    },
+    {
+      question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
+      type: "text",
+      media: null,
+      options: [
+        "iburyo",
+        "ibumoso",
+        "Ku ruhande uru n'uru",
+        "iburyo cyangwa ibumoso"
+      ],
+      correct: 3
+    },
+    {
+      question: "Ikinyabiziga cyose cg ibinyabiziga bikururana,iyo bigenda bigomba kugira :",
+      type: "text",
+      media: null,
+      options: [
+        "Ikibiranga",
+        "Imyanya yo kwicarwamo",
+        "Ubiyobora",
+        "Ntagisubizo cy’ukuri kirimo"
+      ],
+      correct: 2
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/19uPZ5v4dRBJpIUQ_9Vvn0vjlgwRKzKb9/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 3
+    },
+  ],
+  4: [
+    {
+      question: "Iki cyapa gisobanura iki?",
+      type: "image",
+      media: "https://media.istockphoto.com/id/452240089/vector/no-entry-german-road-sign.jpg?s=612x612&w=0&k=20&c=2OOVqYE-tuTMLfi89LT9-DAOkMzYuu0NZ7ToGUnsjuE=",
+      options: [
+        "Ntihanyurwa",
+        "Komeza w'igengesereye",
+        "Si njye kireba",
+        "Inkomane imbere"
+      ],
+      correct: 0
+    },{
+    question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+    type: "video",
+    media: "https://drive.google.com/file/d/1v-jN95zI9XNyE-PxA_5nlLPA_YMwmqkM/preview",
+    options: [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    correct: 2
+  },
+    {
+      question: "Iyo uri gutwara mu gihu ukwiye gucana aya matara:",
+      type: "text",
+      media: null,
+      options: ["Amaremare", "Amagufi", "Y'imbere mu kinyabiziga", "Si ngombwa kuyacana"],
+      correct: 1
+    },
+    {
+      question: "Iki cyapa kiri mubuhe bwoko bw'ibyapa?:",
+      type: "image",
+      media: "https://grammarvocab.com/wp-content/uploads/2022/11/Road-Work-Signs.png?w=400&h=300&fit=crop",
+      options: ["Ibibuza", "Ibitegeka", "Ibiburira", "Ibiyobora"],
+      correct: 2
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/126o3g5L3T-VP4g7jl27dH145X8ouU9mB/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 2
+    },
+    {
+      question: "Ijambo” itara ndanga cyerekezo cg ikinyoteri” bivuga itara ry’ikinyabiziga rigenewe kwereka abandi bagenzi ko umuyobozi ashaka kugana :",
+      type: "text",
+      media: null,
+      options: [
+        "iburyo",
+        "ibumoso",
+        "Ku ruhande uru n'uru",
+        "iburyo cyangwa ibumoso"
+      ],
+      correct: 3
+    },
+    {
+      question: "Ikinyabiziga cyose cg ibinyabiziga bikururana,iyo bigenda bigomba kugira :",
+      type: "text",
+      media: null,
+      options: [
+        "Ikibiranga",
+        "Imyanya yo kwicarwamo",
+        "Ubiyobora",
+        "Ntagisubizo cy’ukuri kirimo"
+      ],
+      correct: 2
+    },
+    {
+      question: "Reba video witonze ubashe guhitamo igisubizo gikwiriye?",
+      type: "video",
+      media: "https://drive.google.com/file/d/19uPZ5v4dRBJpIUQ_9Vvn0vjlgwRKzKb9/preview",
+      options: [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      correct: 3
+    },
   ]
 };
 
@@ -136,10 +379,21 @@ export default function Quiz({ level, onComplete }: QuizProps) {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    // Randomly select 5 questions from the level's question pool
     const levelQuestions = quizData[level as keyof typeof quizData];
-    const shuffled = [...levelQuestions].sort(() => Math.random() - 0.5);
-    setQuestions(shuffled.slice(0, 5));
+    if (levelQuestions.length < 5) {
+      // If less than 5 questions, duplicate some questions to make up the difference
+      const repeatedQuestions = [...levelQuestions];
+      while (repeatedQuestions.length < 5) {
+        repeatedQuestions.push(
+          levelQuestions[Math.floor(Math.random() * levelQuestions.length)]
+        );
+      }
+      setQuestions(repeatedQuestions.slice(0, 5));
+    } else {
+      // Shuffle and take exactly 5 questions
+      const shuffled = [...levelQuestions].sort(() => Math.random() - 0.5);
+      setQuestions(shuffled.slice(0, 5));
+    }
   }, [level]);
 
   const handleAnswer = (answerIndex: number) => {
@@ -154,17 +408,17 @@ export default function Quiz({ level, onComplete }: QuizProps) {
     }
 
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(c => c + 1);
+      setCurrentQuestion((c) => c + 1);
     } else {
       setShowResults(true);
     }
   };
 
   const calculateScore = () => {
-    const correctAnswers = answers.filter(
+    const totalCorrectAnswers = answers.filter(
       (answer, index) => answer === questions[index].correct
     ).length;
-    return (correctAnswers / questions.length) * 100;
+    return totalCorrectAnswers; // Return the count of correct answers
   };
 
   if (questions.length === 0) {
@@ -173,7 +427,8 @@ export default function Quiz({ level, onComplete }: QuizProps) {
 
   if (showResults) {
     const score = calculateScore();
-    const passed = score >= 60;
+    const totalQuestions = questions.length;
+    const passed = score >= 3; // Passing score: At least 3 correct answers
 
     return (
       <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
@@ -183,18 +438,20 @@ export default function Quiz({ level, onComplete }: QuizProps) {
           ) : (
             <XCircle className="w-20 h-20 mx-auto mb-4 text-red-500" />
           )}
-          <h2 className="text-3xl font-bold mb-4">Quiz Results</h2>
-          <p className="text-2xl mb-4">Your score: {score}%</p>
+          <h2 className="text-3xl font-bold mb-4">Ibyavuye mw'Ibazwa</h2>
+          <p className="text-2xl mb-4">
+            Amanota : {score}/{totalQuestions}
+          </p>
           <p className="text-xl mb-6">
-            {passed 
-              ? "Congratulations! You passed!" 
-              : "Sorry, you need 60% to pass. Try again!"}
+            {passed
+              ? "Congratulations! Uratsize!"
+              : "Ihangane uratsizwe ucyeneye gukora ibibazo 3/5 byibuze!"}
           </p>
           <button
             onClick={() => onComplete(passed)}
             className="px-8 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition-colors"
           >
-            {passed ? "Continue to Next Level" : "Try Again"}
+            {passed ? "Komeza kucyindi cyiciro" : "Subiramo"}
           </button>
         </div>
       </div>
@@ -206,11 +463,15 @@ export default function Quiz({ level, onComplete }: QuizProps) {
   return (
     <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-2xl w-full">
       <div className="mb-8">
-        <h2 className="text-xl mb-4">Ikibazo cya {currentQuestion + 1} muri {questions.length}</h2>
+        <h2 className="text-xl mb-4">
+          Ikibazo cya {currentQuestion + 1} muri {questions.length}
+        </h2>
         <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-          <div 
+          <div
             className="h-full bg-blue-500 transition-all duration-300 ease-out"
-            style={{ width: `${((currentQuestion) / questions.length) * 100}%` }}
+            style={{
+              width: `${((currentQuestion ) / questions.length) * 100}%`,
+            }}
           />
         </div>
       </div>
@@ -220,11 +481,11 @@ export default function Quiz({ level, onComplete }: QuizProps) {
 
         {question.type === "image" && question.media && (
           <div className="mb-6">
-            <img 
-              src={question.media} 
+            <img
+              src={question.media}
               alt="Question visual"
               className="w-full h-48 object-cover rounded-lg mb-4"
-              style={{ width: '100%',objectFit:'scale-down'}}
+              style={{ width: "100%", objectFit: "scale-down" }}
             />
           </div>
         )}
